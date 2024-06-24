@@ -15,6 +15,7 @@ typedef struct agenda{ //Typedef serve para definir um nome para simplificar, e 
 void addContato(void);
 void pesquisarContato(void); 
 void excluirContato(void);   
+void limparContato(void);
 
 
 int main(void){
@@ -27,7 +28,8 @@ int main(void){
         printf("[a] Criar Contato \n");
         printf("[b] Pesquisar Contato \n");
         printf("[c] Excluir Contato \n");
-        printf("[d] Fechar Agenda\n\n");
+        printf("[d] Apagar a Lista de Contatos \n");
+        printf("[e] Fechar Agenda\n\n");
         printf("Digite a sua opcao: ");
         scanf("%c",&opcao);
         fflush(stdin);
@@ -43,9 +45,12 @@ int main(void){
                 excluirContato();
                 break;
             case 'd':
+                limparContato();
+                break;
+            case 'e':
                 break;
         }
-    } while (opcao != 'd');
+    } while (opcao != 'e');
 
     printf("\nSaindo...\n");
 
@@ -125,22 +130,20 @@ void pesquisarContato(void) {
     }
 }
 
-
 void excluirContato(void) {
 
-    /*char NomeExcluir[30];
+    char NomeExcluir[30];
     FILE *excluirContato, *Auxiliar;
-    contato c;
+    Contato c;
 
-    excluirContato = fopen("contatos.txt", "r");     //Abrir arquivo original para leitura
+    excluirContato = fopen("contatos.bin", "rb");     //Abrir arquivo original para leitura
 
     if (excluirContato == NULL) {
         printf("Erro ao abrir arquivo.\n");
         return;
     }
-
 	
-    Auxiliar = fopen("temp.txt", "w");    //Abrir arquivo temporario
+    Auxiliar = fopen("temp.bin", "wb");    //Abrir arquivo temporario
 
     if (Auxiliar == NULL) {
         printf("Erro ao abrir arquivo temporario.\n");
@@ -161,8 +164,32 @@ void excluirContato(void) {
     fclose(excluirContato);
     fclose(Auxiliar);
     
-	remove("contatos.txt");  // Remover o arquivo original e renomear o arquivo temporário para o original
-    rename("temp.txt", "contatos.txt");
+	remove("contatos.bin");  // Remover o arquivo original e renomear o arquivo temporário para o original
+    rename("temp.bin", "contatos.bin");
     printf("Contato excluido com sucesso.\n");
-    fflush(stdin);*/
+    fflush(stdin);
+}
+
+void limparContato(void){
+    remove("contatos.bin");
+
+    Contato contato; //Define estrutura "Nome" e "Numero", usado la no struct
+    FILE *arquivo; //Declarar variavel "arquivo"
+    arquivo = fopen("contatos.bin","wb"); //Atribui a variavel "Arquivo" ao arquivo | Por que é usado wb? W - write, e o B é por se tratar de binario
+
+    char nomePlaceholder[31] = "Placeholder"; //Placeholder pq o programa de pesquisa não estava lendo o primeiro contato
+    char numeroPlaceholder[12] = "11999999999";
+
+	if (arquivo == NULL) {
+        printf("Erro ao abrir arquivo.\n");
+		return;
+    }
+
+    strcpy(contato.nome, nomePlaceholder);
+    strcpy(contato.numero, numeroPlaceholder);
+
+    fwrite(&contato, sizeof(Contato), 1, arquivo); //Não precisa do \n para dar um "enter" porque o gets pega o espaço do enter quando a gente escreve
+	
+    fclose(arquivo);
+    fflush(stdin);
 }
